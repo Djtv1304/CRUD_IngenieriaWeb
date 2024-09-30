@@ -32,9 +32,44 @@ namespace CRUD_IngenieriaWeb.Service
 
         }
 
-        public Task<Vacante> ActualizarVacante(Vacante VacanteToUpdate)
+        public async Task<Vacante> ActualizarVacante(Vacante VacanteToUpdate)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                // Serializar el objeto VacanteToCreate a JSON
+                string jsonContent = JsonConvert.SerializeObject(VacanteToUpdate);
+
+                // Crear el contenido de la solicitud HTTP
+                HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                // Realizar la solicitud POST al endpoint /contratacionPersonal/Vacantees
+                HttpResponseMessage response = await httpClient.PostAsync(_baseURL + "/vacante", content);
+
+                // Verificar si la solicitud fue exitosa
+                if (response.IsSuccessStatusCode)
+                {
+                    // Leer el contenido de la respuesta como una cadena JSON
+                    string jsonResponse = await response.Content.ReadAsStringAsync();
+
+                    // Deserializar la cadena JSON en un objeto Vacante
+                    Vacante VacanteCreado = JsonConvert.DeserializeObject<Vacante>(jsonResponse);
+
+                    return VacanteCreado;
+                }
+                else
+                {
+                    // Manejar el caso de error de la solicitud
+                    // Puedes lanzar una excepción personalizada o devolver null, dependiendo de tus necesidades
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejar cualquier excepción que ocurra durante la solicitud
+                // Puedes lanzar una excepción personalizada o devolver null, dependiendo de tus necesidades
+                throw new Exception($"Error: {ex.Message}");
+            }
         }
 
         public async Task<Vacante> CrearVacante(Vacante VacanteToCreate)
@@ -79,9 +114,30 @@ namespace CRUD_IngenieriaWeb.Service
             }
         }
 
-        public Task<string> EliminarVacanteById(int id)
+        public async Task<string> EliminarVacanteById(string idVacante)
         {
-            throw new NotImplementedException();
+
+            // Realizar la solicitud POST al endpoint /contratacionPersonal/Vacantees
+            HttpResponseMessage response = await httpClient.DeleteAsync(_baseURL + "/vacante/" + idVacante);
+
+            // Verificar si la solicitud fue exitosa
+            if (response.IsSuccessStatusCode)
+            {
+                // Leer el contenido de la respuesta como una cadena JSON
+                string jsonResponse = await response.Content.ReadAsStringAsync();
+
+                // Deserializar la cadena JSON en un objeto Vacante
+                //string mensajeConfirmacion = JsonConvert.DeserializeObject<string>(jsonResponse);
+
+                return jsonResponse;
+            }
+            else
+            {
+                // Manejar el caso de error de la solicitud
+                // Puedes lanzar una excepción personalizada o devolver null, dependiendo de tus necesidades
+                return "";
+            }
+
         }
 
         public async Task<List<Vacante>> ObtenerVacantes()

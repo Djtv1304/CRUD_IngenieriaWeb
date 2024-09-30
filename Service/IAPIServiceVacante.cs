@@ -11,7 +11,7 @@ namespace CRUD_IngenieriaWeb.Service
 
         Task<Vacante> ActualizarVacante(Vacante VacanteToUpdate);
 
-        Task<string> EliminarVacanteById(int id);
+        Task<string> EliminarVacanteById(string id);
 
     }
 }

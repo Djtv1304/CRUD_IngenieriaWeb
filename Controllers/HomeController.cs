@@ -2,6 +2,7 @@ using CRUD_IngenieriaWeb.Models;
 using CRUD_IngenieriaWeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 
 namespace CRUD_IngenieriaWeb.Controllers
@@ -52,52 +53,56 @@ namespace CRUD_IngenieriaWeb.Controllers
         // GET: ProductoController/Edit/5
         public async Task<IActionResult> Editar(string idVacante)
         {
-
             try
             {
-
-                // Invoco a la API y traigo mi producto en base al ID
+                // Invoco a la API y traigo mi lista de vacantes
                 List<Vacante> listaVacantes = await _apiServiceVacante.ObtenerVacantes();
 
-                Vacante vacanteToEdit = listaVacantes.FirstOrDefault(listaVacantes => listaVacantes.id == idVacante);
-
-                if (vacanteToEdit != null)
+                // Verifica que la lista de vacantes no sea null o vacía
+                if (listaVacantes != null && listaVacantes.Any())
                 {
+                    // Busca la vacante por su ID
+                    Vacante vacanteToEdit = listaVacantes.FirstOrDefault(v => v.id == idVacante);
 
-                    // Retorno el producto a la vista
-                    return View(vacanteToEdit);
-
+                    if (vacanteToEdit != null)
+                    {
+                        // Retorno la vacante a la vista si la encuentro
+                        return View(vacanteToEdit);
+                    }
                 }
+
+                // Si no encuentra la vacante o la lista está vacía, redirige al índice
+                return RedirectToAction("Index");
             }
             catch (Exception error)
             {
+                // Registra el error (opcionalmente puedes agregar un logger aquí)
+                Console.WriteLine(error.Message);
 
+                // En caso de error, redirige al índice
                 return RedirectToAction("Index");
-
             }
-
-            return RedirectToAction("Index");
-
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> Editar(Miembro nuevoMiembro)
+        public async Task<IActionResult> Editar(Vacante nuevaVacante)
         {
 
             try
             {
 
-                if (nuevoMiembro != null)
+                if (nuevaVacante != null)
                 {
 
                     // Envío a la API el nuevo producto y el ID del mismo
-                    await _apiService.UpdateMiembro(nuevoMiembro, nuevoMiembro.idMiembro);
-                    return RedirectToAction("Index");
+                    await _apiServiceVacante.ActualizarVacante(nuevaVacante);
+                    return RedirectToAction("Crud");
 
                 }
 
                 // Retorno el miembro a la vista
-                return View(nuevoMiembro);
+                return View(nuevaVacante);
 
             }
             catch (Exception error)
@@ -111,17 +116,17 @@ namespace CRUD_IngenieriaWeb.Controllers
 
 
         // GET: ProductoController/Delete/5
-        public async Task<IActionResult> Delete(int idMiembro)
+        public async Task<IActionResult> Delete(string idVacante)
         {
 
             try
             {
 
-                if (idMiembro != 0)
+                if (!idVacante.IsNullOrEmpty())
                 {
 
-                    await _apiService.DeleteMiembro(idMiembro);
-                    return RedirectToAction("Index");
+                    await _apiServiceVacante.EliminarVacanteById(idVacante);
+                    return RedirectToAction("Crud");
 
                 }
 
@@ -129,7 +134,7 @@ namespace CRUD_IngenieriaWeb.Controllers
             catch (Exception error)
             {
 
-                return RedirectToAction();
+                return RedirectToAction("Index");
 
             }
 

@@ -1,0 +1,44 @@
+﻿@model CRUD_IngenieriaWeb.Models.Vacante
+
+@{
+    ViewData["Title"] = "Editar Vacante";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label>ID:</label>
+        <input asp-for="id" class="form-control" placeholder="" readonly>
+    </div>
+    <div class="mb-3">
+        <label>Titulo:</label>
+        <input asp-for="titulo" class="form-control" placeholder="Ingrese el nuevo titulo">
+    </div>
+    <div class="mb-3">
+        <label>Descripción:</label>
+        <input asp-for="descripcion" class="form-control" placeholder="Ingrese la nueva descripción">
+    </div>
+    <div class="mb-3">
+        <label>Requisitos:</label>
+
+        <input asp-for="requisitos[0]" class="form-control" placeholder="Ingrese un nuevo requisito">
+    </div>
+    <div class="mb-3">
+        <label>Fecha Publicación:</label>
+        <input asp-for="fecha_publicacion" class="form-control" placeholder="Ingrese la nueva fecha de publicación que se reflejará">
+    </div>
+    <div class="mb-3">
+        <label>Estado:</label>
+        <input asp-for="estado" class="form-control" placeholder="Ingrese el nuevo estado de la vacante (Activa o Inactiva)">
+    </div>
+
+    <div class="row col-6">
+        <div class="col-6 col-md-6">
+            <button type="submit" class="btn btn-primary">Confirmar y Editar</button>
+        </div>
+        <div class="col-6 col-md-6">
+            <a asp-action="Crud" class="btn btn-outline-secondary">Regresar</a>
+        </div>
+    </div>
+</form>
