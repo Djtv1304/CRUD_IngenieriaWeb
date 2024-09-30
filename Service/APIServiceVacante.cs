@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CRUD_IngenieriaWeb.Service
 {
-    public class APIServiceProfesor : IAPIServiceProfesor
+    public class APIServiceVacante : IAPIServiceVacante
     {
 
         private static string _baseURL;
@@ -13,7 +13,7 @@ namespace CRUD_IngenieriaWeb.Service
 
         HttpClient httpClient = new HttpClient();
 
-        public APIServiceProfesor(IActionContextAccessor actionContextAccessor)
+        public APIServiceVacante(IActionContextAccessor actionContextAccessor)
         {
 
             // Añadir el archivo JSON al contenedor
@@ -22,7 +22,7 @@ namespace CRUD_IngenieriaWeb.Service
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            _baseURL = builder.GetSection("ApiSettings:BaseProfesorUrl").Value;
+            _baseURL = builder.GetSection("ApiSettings:BaseVacanteUrl").Value + "contratacionPersonal";
 
             // Establecer la dirección base del API
             httpClient.BaseAddress = new Uri(_baseURL);
@@ -32,26 +32,26 @@ namespace CRUD_IngenieriaWeb.Service
 
         }
 
-        public Task<Profesor> ActualizarProfesor(Profesor ProfesorToUpdate)
+        public Task<Vacante> ActualizarVacante(Vacante VacanteToUpdate)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Profesor> CrearProfesor(Profesor ProfesorToCreate)
+        public async Task<Vacante> CrearVacante(Vacante VacanteToCreate)
         {
             try
             {
-                // Eliminar el ID del profesor a crear
-                ProfesorToCreate.Id = "";
+                // Eliminar el ID del Vacante a crear
+                VacanteToCreate.id = null;
 
-                // Serializar el objeto ProfesorToCreate a JSON
-                string jsonContent = JsonConvert.SerializeObject(ProfesorToCreate);
+                // Serializar el objeto VacanteToCreate a JSON
+                string jsonContent = JsonConvert.SerializeObject(VacanteToCreate);
 
                 // Crear el contenido de la solicitud HTTP
                 HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
-                // Realizar la solicitud POST al endpoint /contratacionPersonal/profesores
-                HttpResponseMessage response = await httpClient.PostAsync(_baseURL + "contratacionPersonal/profesores", content);
+                // Realizar la solicitud POST al endpoint /contratacionPersonal/Vacantees
+                HttpResponseMessage response = await httpClient.PostAsync(_baseURL + "/vacante", content);
 
                 // Verificar si la solicitud fue exitosa
                 if (response.IsSuccessStatusCode)
@@ -59,10 +59,10 @@ namespace CRUD_IngenieriaWeb.Service
                     // Leer el contenido de la respuesta como una cadena JSON
                     string jsonResponse = await response.Content.ReadAsStringAsync();
 
-                    // Deserializar la cadena JSON en un objeto Profesor
-                    Profesor profesorCreado = JsonConvert.DeserializeObject<Profesor>(jsonResponse);
+                    // Deserializar la cadena JSON en un objeto Vacante
+                    Vacante VacanteCreado = JsonConvert.DeserializeObject<Vacante>(jsonResponse);
 
-                    return profesorCreado;
+                    return VacanteCreado;
                 }
                 else
                 {
@@ -79,17 +79,17 @@ namespace CRUD_IngenieriaWeb.Service
             }
         }
 
-        public Task<string> EliminarProfesor(int id)
+        public Task<string> EliminarVacanteById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<List<Profesor>> ObtenerProfesores()
+        public async Task<List<Vacante>> ObtenerVacantes()
         {
             try
             {
-                // Realizar la solicitud GET al endpoint /profesores/all
-                HttpResponseMessage response = await httpClient.GetAsync(_baseURL + "contratacionPersonal/profesores/all");
+                // Realizar la solicitud GET al endpoint /Vacantes/all
+                HttpResponseMessage response = await httpClient.GetAsync(_baseURL + "/vacante/all");
 
                 // Verificar si la solicitud fue exitosa
                 if (response.IsSuccessStatusCode)
@@ -97,16 +97,16 @@ namespace CRUD_IngenieriaWeb.Service
                     // Leer el contenido de la respuesta como una cadena JSON
                     string jsonContent = await response.Content.ReadAsStringAsync();
 
-                    // Deserializar la cadena JSON en una lista de objetos Profesor
-                    List<Profesor> profesores = JsonConvert.DeserializeObject<List<Profesor>>(jsonContent);
+                    // Deserializar la cadena JSON en una lista de objetos Vacante
+                    List<Vacante> Vacantes = JsonConvert.DeserializeObject<List<Vacante>>(jsonContent);
 
-                    return profesores;
+                    return Vacantes;
                 }
                 else
                 {
                     // Manejar el caso de error de la solicitud
                     // Puedes lanzar una excepción personalizada o devolver una lista vacía, dependiendo de tus necesidades
-                    return new List<Profesor>();
+                    return new List<Vacante>();
                 }
             }
             catch (Exception ex)

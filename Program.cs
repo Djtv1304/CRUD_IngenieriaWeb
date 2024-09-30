@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IAPIServiceUsuario, APIServiceUsuario>();
-builder.Services.AddScoped<IAPIServiceProfesor, APIServiceProfesor>();
+builder.Services.AddScoped<IAPIServiceVacante, APIServiceVacante>();
 
 // Agregar el servicio de IActionContextAccessor aquí
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

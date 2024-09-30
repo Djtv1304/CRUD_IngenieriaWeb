@@ -1,58 +1,31 @@
-﻿@model CRUD_IngenieriaWeb.Models.Profesor
+﻿@model CRUD_IngenieriaWeb.Models.Vacante
 
 @{
-    ViewData["Title"] = "Crear Profesor";
+    ViewData["Title"] = "Crear Vacante";
 }
 
 <h1>@ViewData["Title"]</h1>
 
 <form method="post">
     <div class="mb-3">
-        <label>Nombre:</label>
-        <input asp-for="nombre" class="form-control" placeholder="Ingrese el nombre">
+        <label>Titulo:</label>
+        <input asp-for="titulo" class="form-control" placeholder="Ingrese el titulo">
     </div>
     <div class="mb-3">
-        <label>Correo:</label>
-        <input asp-for="correo" class="form-control" placeholder="Ingrese el correo">
+        <label>Descripción:</label>
+        <input asp-for="descripcion" class="form-control" placeholder="Ingrese la descripción">
     </div>
     <div class="mb-3">
-        <label>Teléfono:</label>
-        <input asp-for="telefono" class="form-control" placeholder="Ingrese el teléfono">
+        <label>Requisitos:</label>
+        <input asp-for="requisitos" class="form-control" placeholder="Ingrese un requisito">
     </div>
     <div class="mb-3">
-        <label>Dirección:</label>
-        <input asp-for="direccion" class="form-control" placeholder="Ingrese la dirección">
+        <label>Fecha Publicación:</label>
+        <input asp-for="fecha_publicacion" class="form-control" placeholder="Ingrese la fecha de publicación que se reflejará">
     </div>
     <div class="mb-3">
         <label>Estado:</label>
-        <input asp-for="estado" class="form-control" placeholder="Ingrese el estado">
-    </div>
-    <div class="mb-3">
-        <label>Documento:</label>
-        <input asp-for="documentos[0].tipo" class="form-control" placeholder="Ingrese el tipo de documento">
-        <input asp-for="documentos[0].url" class="form-control" placeholder="Ingrese la URL del documento">
-    </div>
-    <div class="mb-3">
-        <label>Experiencia:</label>
-        <input asp-for="experiencia[0].institucion" class="form-control" placeholder="Ingrese la institución de experiencia">
-        <input asp-for="experiencia[0].puesto" class="form-control" placeholder="Ingrese el puesto de experiencia">
-        <input asp-for="experiencia[0].fechaInicio" class="form-control" placeholder="Ingrese la fecha de inicio de experiencia">
-        <input asp-for="experiencia[0].fechaFin" class="form-control" placeholder="Ingrese la fecha de fin de experiencia">
-        <input asp-for="experiencia[0].descripcion" class="form-control" placeholder="Ingrese la descripción de experiencia">
-    </div>
-    <div class="mb-3">
-        <label>Certificación:</label>
-        <input asp-for="certificaciones[0].titulo" class="form-control" placeholder="Ingrese el título de certificación">
-        <input asp-for="certificaciones[0].institucion" class="form-control" placeholder="Ingrese la institución de certificación">
-        <input asp-for="certificaciones[0].fechaObtencion" class="form-control" placeholder="Ingrese la fecha de obtención de certificación">
-    </div>
-    <div class="mb-3">
-        <label>Habilidades:</label>
-        <input asp-for="habilidades" class="form-control" placeholder="Ingrese las habilidades">
-    </div>
-    <div class="mb-3">
-        <label>¿Es tutor?</label>
-        <input asp-for="esTutor" type="checkbox">
+        <input asp-for="estado" class="form-control" placeholder="Ingrese el estado de la vacante (Activa o Inactiva)">
     </div>
 
     <div class="row col-6">

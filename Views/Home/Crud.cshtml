@@ -1,67 +1,42 @@
-﻿<div class="text-center">
+﻿@model List<CRUD_IngenieriaWeb.Models.Vacante>
+
+<div class="text-center">
     <h1 class="display-4">Operaciones CRUD</h1>
     <h2 class="display-4">Lista de Profesores</h2>
 
-    <a href="/Home/Crear" class="btn btn-primary">Crear Profesor</a>
+    <a href="/Home/Crear" class="btn btn-primary">Crear Vacante</a>
 
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">Nombre</th>
-                <th scope="col">Correo</th>
-                <th scope="col">Telefono</th>
-                <th scope="col">Direccion</th>
-                <th scope="col">Experiencia</th>
-                <th scope="col">Certificaciones</th>
-                <th scope="col">Habilidades</th>
-                <th scope="col">Estado Profesor</th>
-                <th scope="col">Documentos</th>
-                <th scope="col">Tutor Activo</th>
+                <th scope="col">Titulo</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Requisitos</th>
+                <th scope="col">Fecha Publicación</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var profesor in Model)
+            @foreach (var vacante in Model)
             {
                 <tr>
-                    <td>@profesor.nombre</td>
-                    <td>@profesor.correo</td>
-                    <td>@profesor.telefono</td>
-                    <td>@profesor.direccion</td>
+                    <td>@vacante.titulo</td>
+                    <td>@vacante.descripcion</td>
                     <td>
-                        @foreach (var experiencia in profesor.experiencia)
+                        @foreach (var requisito in vacante.requisitos)
                         {
-                            <span><strong>@experiencia.institucion</strong></span><br>
-                            <span>@experiencia.puesto</span><br>
-                            <span>@experiencia.fechaInicio</span><br>
-                            <span>@experiencia.fechaFin</span><br>
-                            <span>@experiencia.descripcion</span><br><br>
-                        }
-                    </td>
-                    <td>
-                        @foreach (var certificacion in profesor.certificaciones)
-                        {
-                            <span><strong>@certificacion.titulo</strong></span><br>
-                            <span>@certificacion.institucion</span><br>
-                            <span>@certificacion.fechaObtencion</span><br><br>
-                        }
-                    </td>
-                    <td>
-                        @foreach (var habilidad in profesor.habilidades)
-                        {
-                            <span>@habilidad</span><br>
-                        }
-                    </td>
-                    <td>@profesor.estado</td>
-                    <td>
-                        @foreach (var documento in profesor.documentos)
-                        {
-                            <span><strong>@documento.tipo</strong></span>
+                            <span>@requisito</span>
 
                             <br>
-                                <span>@documento.url</span><br>
                         }
                     </td>
-                    <td>@(profesor.esTutor ? "Si" : "No")</td>
+                    <td>@vacante.fecha_publicacion</td>
+                    <td>@vacante.estado</td>
+                    <td>
+                        <a asp-action="Editar" asp-route-idMiembro="@vacante.id" class="btn btn-danger btn-sm">Editar <i class="bi bi-pencil-square"></i></a>
+                        <a asp-action="Delete" asp-route-idMiembro="@vacante.id" class="btn btn-warning btn-sm">Eliminar <i class="bi bi-trash-fill"></i></a>
+                    </td>
                 </tr>
             }
         </tbody>

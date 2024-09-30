@@ -1,18 +1,18 @@
 using CRUD_IngenieriaWeb.Models;
-using CRUD_IngenieriaWeb.Models.ProfesorAttributes;
 using CRUD_IngenieriaWeb.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace CRUD_IngenieriaWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IAPIServiceProfesor _apiServiceProfesor;
+        private readonly IAPIServiceVacante _apiServiceVacante;
 
-        public HomeController(IAPIServiceProfesor apiServiceProfesor)
+        public HomeController(IAPIServiceVacante apiServiceVacante)
         {
-            _apiServiceProfesor = apiServiceProfesor;
+            _apiServiceVacante = apiServiceVacante;
         }
 
         public IActionResult Index()
@@ -27,39 +27,114 @@ namespace CRUD_IngenieriaWeb.Controllers
 
         public async Task<IActionResult> Crud()
         {
-            List<Profesor> profesores = await _apiServiceProfesor.ObtenerProfesores();
+            List<Vacante> vacantes = await _apiServiceVacante.ObtenerVacantes();
 
-            return View(profesores);
+            return View(vacantes);
         }
 
         public IActionResult Crear()
         {
-
-            var profesor = new Profesor
-            {
-                experiencia = new List<Experiencia> { new Experiencia() },
-                certificaciones = new List<Certificacion> { new Certificacion() },
-                documentos = new List<Documento> { new Documento() }
-            };
 
             return View();
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> Crear(Profesor nuevoProfesor)
+        public async Task<IActionResult> Crear(Vacante nuevaVacante)
         {
 
-            Profesor profesorCreado = await _apiServiceProfesor.CrearProfesor(nuevoProfesor);
+            Vacante vacanteCreada = await _apiServiceVacante.CrearVacante(nuevaVacante);
 
             return RedirectToAction("Crud");
 
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // GET: ProductoController/Edit/5
+        public async Task<IActionResult> Editar(string idVacante)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            try
+            {
+
+                // Invoco a la API y traigo mi producto en base al ID
+                List<Vacante> listaVacantes = await _apiServiceVacante.ObtenerVacantes();
+
+                Vacante vacanteToEdit = listaVacantes.FirstOrDefault(listaVacantes => listaVacantes.id == idVacante);
+
+                if (vacanteToEdit != null)
+                {
+
+                    // Retorno el producto a la vista
+                    return View(vacanteToEdit);
+
+                }
+            }
+            catch (Exception error)
+            {
+
+                return RedirectToAction("Index");
+
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Editar(Miembro nuevoMiembro)
+        {
+
+            try
+            {
+
+                if (nuevoMiembro != null)
+                {
+
+                    // Envío a la API el nuevo producto y el ID del mismo
+                    await _apiService.UpdateMiembro(nuevoMiembro, nuevoMiembro.idMiembro);
+                    return RedirectToAction("Index");
+
+                }
+
+                // Retorno el miembro a la vista
+                return View(nuevoMiembro);
+
+            }
+            catch (Exception error)
+            {
+
+                return View();
+
+            }
+
+        }
+
+
+        // GET: ProductoController/Delete/5
+        public async Task<IActionResult> Delete(int idMiembro)
+        {
+
+            try
+            {
+
+                if (idMiembro != 0)
+                {
+
+                    await _apiService.DeleteMiembro(idMiembro);
+                    return RedirectToAction("Index");
+
+                }
+
+            }
+            catch (Exception error)
+            {
+
+                return RedirectToAction();
+
+            }
+
+            return RedirectToAction("Index");
+
         }
     }
 }
