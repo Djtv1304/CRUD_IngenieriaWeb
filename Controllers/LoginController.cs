@@ -1,4 +1,5 @@
 ﻿using CRUD_IngenieriaWeb.Models;
+using CRUD_IngenieriaWeb.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -7,6 +8,16 @@ namespace CRUD_IngenieriaWeb.Controllers
 {
     public class LoginController : Controller
     {
+
+        private readonly IAPIServiceUsuario _apiServiceUsuario;
+
+        public LoginController(IAPIServiceUsuario apiServiceUsuario)
+        {
+
+            _apiServiceUsuario = apiServiceUsuario;
+
+        }
+
         // GET: LoginController
         public IActionResult Index()
         {
@@ -25,17 +36,32 @@ namespace CRUD_IngenieriaWeb.Controllers
             return View();
         }
 
-        // POST: LoginController/Create
+        // POST: LoginController/SignIn
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Index(Usuario UserToLogin)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                UserToLogin.isAuthenticated = await _apiServiceUsuario.ValidarUsuario(UserToLogin);
+
+                if (UserToLogin.isAuthenticated == true)
+                {
+                    // Guardar información del usuario en la sesión
+                    HttpContext.Session.SetString("User", JsonConvert.SerializeObject(UserToLogin));
+
+                    // Redirigir a la página de inicio
+                    return RedirectToAction("Index", "Home");
+                }
+
+                // Aquí asignamos el mensaje de error
+                ViewBag.ErrorMessage = "Usuario o contraseña incorrectos.";
+
+                return View();
             }
-            catch
+            catch(Exception error)
             {
+                // Aquí también podrías asignar un mensaje de error si lo deseas
+                ViewBag.ErrorMessage = error.Message;
                 return View();
             }
         }
