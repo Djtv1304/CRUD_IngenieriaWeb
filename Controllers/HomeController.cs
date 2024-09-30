@@ -1,4 +1,5 @@
 using CRUD_IngenieriaWeb.Models;
+using CRUD_IngenieriaWeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,11 +7,11 @@ namespace CRUD_IngenieriaWeb.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IAPIServiceProfesor _apiServiceProfesor;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IAPIServiceProfesor apiServiceProfesor)
         {
-            _logger = logger;
+            _apiServiceProfesor = apiServiceProfesor;
         }
 
         public IActionResult Index()
@@ -21,6 +22,30 @@ namespace CRUD_IngenieriaWeb.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public async Task<IActionResult> Crud()
+        {
+            List<Profesor> profesores = await _apiServiceProfesor.ObtenerProfesores();
+
+            return View(profesores);
+        }
+
+        public IActionResult Crear()
+        {
+
+            return View();
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Crear(Profesor nuevoProfesor)
+        {
+
+            Profesor profesorCreado = await _apiServiceProfesor.CrearProfesor(nuevoProfesor);
+
+            return RedirectToAction("Crud");
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
