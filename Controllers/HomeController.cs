@@ -1,4 +1,5 @@
 using CRUD_IngenieriaWeb.Models;
+using CRUD_IngenieriaWeb.Models.ProfesorAttributes;
 using CRUD_IngenieriaWeb.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -33,6 +34,13 @@ namespace CRUD_IngenieriaWeb.Controllers
 
         public IActionResult Crear()
         {
+
+            var profesor = new Profesor
+            {
+                experiencia = new List<Experiencia> { new Experiencia() },
+                certificaciones = new List<Certificacion> { new Certificacion() },
+                documentos = new List<Documento> { new Documento() }
+            };
 
             return View();
 

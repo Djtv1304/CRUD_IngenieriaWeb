@@ -5,6 +5,13 @@ namespace CRUD_IngenieriaWeb.Models
     public class Profesor
     {
 
+        public Profesor()
+        {
+            experiencia = new List<Experiencia> { new Experiencia() }; // Inicializa la lista con un elemento
+            certificaciones = new List<Certificacion> { new Certificacion() }; // Inicializa la lista con un elemento
+            documentos = new List<Documento> { new Documento() }; // Inicializa la lista con un elemento
+        }
+
         public string Id { get; set; }
 
         public string nombre { get; set; }
