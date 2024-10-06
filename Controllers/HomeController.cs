@@ -1,5 +1,6 @@
 using CRUD_IngenieriaWeb.Models;
 using CRUD_IngenieriaWeb.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 
 namespace CRUD_IngenieriaWeb.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly IAPIServiceVacante _apiServiceVacante;

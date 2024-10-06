@@ -1,8 +1,12 @@
 ﻿using CRUD_IngenieriaWeb.Models;
 using CRUD_IngenieriaWeb.Service;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CRUD_IngenieriaWeb.Controllers
 {
@@ -44,10 +48,23 @@ namespace CRUD_IngenieriaWeb.Controllers
             {
                 UserToLogin.isAuthenticated = await _apiServiceUsuario.ValidarUsuario(UserToLogin);
 
-                if (UserToLogin.isAuthenticated == true)
+                if (UserToLogin.isAuthenticated == true && !UserToLogin.Nombre.IsNullOrEmpty())
                 {
                     // Guardar información del usuario en la sesión
                     HttpContext.Session.SetString("User", JsonConvert.SerializeObject(UserToLogin));
+ 
+                    // Crear una lista de Claims que representan la identidad del usuario
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, UserToLogin.Nombre),
+                    };
+
+                    // Crear un objeto ClaimsIdentity que sirve para representar la identidad del usuario
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    // Creo las cookies de autenticación
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
 
                     // Redirigir a la página de inicio
                     return RedirectToAction("Index", "Home");
@@ -64,6 +81,12 @@ namespace CRUD_IngenieriaWeb.Controllers
                 ViewBag.ErrorMessage = error.Message;
                 return View();
             }
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Login");
         }
 
         // GET: LoginController/Edit/5
